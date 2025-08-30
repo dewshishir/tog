@@ -1,0 +1,200 @@
+## Please describe every line of the following MATLAB code:
+/% Bisection Method %/
+clc;
+clear all;
+fx=input('Enter the function, F(x) = ','s');
+f=eval(['@(x)',fx]) ;
+a=input('Enter a=');
+b=input('Enter b=');
+s=1;
+fprintf('N\t \ta\t\t b\t\t x\t\t f(x)\t\t Error\n');
+for k=1:100;
+x(k)=(a+b)/2;
+c=f(x(k));
+fprintf('%g %f %f %f %f %f\n',k,a,b,x(k),c,s);
+if c>0
+b=x(k);
+else
+a=x(k);
+end
+x(k+1)=(a+b)/2;
+s=((abs(x(k+1)-x(k)))/abs(x(k+1)))*100;
+if s<=.01
+break;
+end
+end
+fprintf('\n\n The root is =%f ',x(k));
+
+
+## Please describe every line of the following MATLAB code:
+/% False position Method %/
+clc;
+clear all;
+fx=input('Enter the function, F(x) = ','s');
+f=eval(['@(x)',fx]) ;
+a=input('Enter a=');
+b=input('Enter b=');
+s=1;
+fprintf('N\t\t a\t\t b\t\t x\t\t f(x)\t\t Error\n');
+for k=1:100;
+x(k)=a-(f(a)*(b-a))/(f(b)-f(a));
+c=f(x(k));
+fprintf('%g %f %f %f %f %f\n',k,a,b,x(k),c,s);
+if c>0
+b=x(k);
+else
+a=x(k);
+end
+x(k+1)=a-(f(a)*(b-a))/(f(b)-f(a));
+s=((abs(x(k+1)-x(k)))/abs(x(k+1)))*100;
+if s<=.01
+break;
+end
+end
+fprintf('\n\n The root is =%f ',x(k));
+
+## Please describe every line of the following MATLAB code:
+/% Newton Raphson Method %/
+clc;
+clear all;
+fx=input('Enter the function ,F(x) = ','s');
+f=eval(['@(x)',fx]) ;
+fx=input('Enter the function ,F"(x) = ','s');
+f1=eval(['@(x)',fx]) ;
+a=input('Enter a = ');
+s=1;
+fprintf('N\t \tX(i)\t\t X\t\t f(x)\t\t Error\n');
+for k=1:1:100
+x(k)=a-(f(a)/f1(a));
+fprintf('%g %f %f %f %f\n',k,a,x(k),f(x(k)),s);
+a=x(k);
+x(k+1)=a-(f(a)/f1(a));
+s=((abs(x(k+1)-x(k)))/abs(x(k+1)))*100;
+if s<=.0001
+break;
+end
+end
+fprintf('\n\nThe root is =%f',x(k));
+
+## Please describe every line of the following MATLAB code:
+/% Secant Method %/
+clc;
+clear all;
+fx=input('Enter the function ,F(x) = ','s');
+f=eval(['@(x)',fx]) ;
+a=input('Enter a=');
+b=input('Enter b=');
+x(1)=a;
+x(2)=b;
+s=1;
+fprintf('N\t\t x(i-1)\t\t x(i)\t\t x(i+1)\t\t f(x)\t\t Error\n');
+for k=3:103;
+it(k)=abs(k-2);
+x(k)=x(k-1)-(f(x(k-1))*(x(k-1)-x(k-2)))/(f(x(k-1))-f(x(k-2)));
+c=f(x(k));
+fprintf('%g %f %f %f %f %f\n\n',it(k),x(k-2),x(k-1),x(k),c,s);
+s=((abs(x(k)-x(k-1)))/abs(x(k)))*100;
+if s<=.001
+break;
+end
+end
+fprintf('\n\nThe root is =%f',x(k));
+
+
+## Please describe every line of the following MATLAB code:
+/% Trapezoidal Rule %/
+% Integral: ∫_0^12 (1/(1+x^2)) dx
+% n = 6
+
+clc;
+clear all;
+f = @(x) 1./(1 + x.^2);   % function
+a = 0; 
+b = 12; 
+n = 6;
+
+h = (b - a) / n;          % step size
+x = a:h:b;                % partition points
+y = f(x);                 % function values
+
+% Apply trapezoidal rule
+I = h * ( 0.5*y(1) + sum(y(2:end-1)) + 0.5*y(end) );
+
+fprintf('Approximate value of integral using trapezoidal rule (n=6) = %.4f\n', I);
+
+
+## Please describe every line of the following MATLAB code:
+/% Simpson's 1/3 Rule %/
+clc;
+clear all;
+
+% Define the function
+f = @(x) sqrt(cos(x));
+
+% Limits
+a = 0;
+b = pi/2;
+
+% Number of intervals (must be even)
+n = 6;
+
+% Step size
+h = (b - a) / n;
+
+% Initialize sum
+sum1 = 0; % for odd terms
+sum2 = 0; % for even terms
+
+% Compute sum of odd and even terms
+for i = 1:n-1
+    x = a + i*h;
+    if mod(i,2)==0
+        sum2 = sum2 + f(x);  % even index terms
+    else
+        sum1 = sum1 + f(x);  % odd index terms
+    end
+end
+
+% Apply Simpson's 1/3 formula
+I = (h/3) * (f(a) + f(b) + 4*sum1 + 2*sum2);
+
+% Display result
+fprintf('The value of the integral is: %.4f\n', I);
+
+## Please describe every line of the following MATLAB code:
+/% Simpson's 3/8 Rule %/
+clc;
+clear all;
+
+% Define the function
+f = @(x) sqrt(cos(x));
+
+% Limits
+a = 0;
+b = pi/2;
+
+% Number of intervals (must be multiple of 3)
+n = 6;
+
+% Step size
+h = (b - a) / n;
+
+% Initialize sums
+sum3 = 0;  % terms where i is multiple of 3
+sum1 = 0;  % terms where i is not multiple of 3
+
+% Loop over subintervals
+for i = 1:n-1
+    x = a + i*h;
+    if mod(i,3)==0
+        sum3 = sum3 + f(x);   % multiples of 3
+    else
+        sum1 = sum1 + f(x);   % non-multiples of 3
+    end
+end
+
+% Apply Simpson's 3/8 formula
+I = (3*h/8) * (f(a) + f(b) + 3*sum1 + 2*sum3);
+
+% Display result
+fprintf('The value of the integral using Simpson''s 3/8 rule is: %.4f\n', I);
