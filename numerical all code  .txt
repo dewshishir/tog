@@ -1,0 +1,528 @@
+1 . //// simple program for matlab 
+
+function simple_program_user_input
+    % Prompt user for the first number
+    num1 = input('Enter the first number: ');
+
+    % Prompt user for the second number
+    num2 = input('Enter the second number: ');
+
+    % Calculate the sum and product of the two numbers
+    sum_result = num1 + num2;
+    product_result = num1 * num2;
+
+    % Display the results
+    fprintf('The sum of %f and %f is %f\n', num1, num2, sum_result);
+    fprintf('The product of %f and %f is %f\n', num1, num2, product_result);
+end
+
+
+output : 
+
+>> simple_prog
+Enter the first number: 
+3
+Enter the second number: 
+4
+The sum of 3.000000 and 4.000000 is 7.000000
+The product of 3.000000 and 4.000000 is 12.000000
+>> 
+
+
+
+
+
+////////////////////
+2.... ///// bisection method /////////
+
+
+% Clearing Screen
+clc
+
+% Setting x as symbolic variable
+syms x;
+
+% Input Section
+y = input('Enter non-linear equations: ');
+a = input('Enter first guess: ');
+b = input('Enter second guess: ');
+e = input('Tolerable error: ');
+
+% Finding Functional Value
+fa = eval(subs(y,x,a));
+fb = eval(subs(y,x,b));
+
+% Implementing Bisection Method
+if fa*fb > 0 
+    disp('Given initial values do not bracket the root.');
+else
+    c = (a+b)/2;
+    fc = eval(subs(y,x,c));
+    fprintf('\n\na\t\t\tb\t\t\tc\t\t\tf(c)\n');
+    while abs(fc)>e
+        fprintf('%f\t%f\t%f\t%f\n',a,b,c,fc);
+        if fa*fc< 0
+            b =c;
+        else
+            a =c;
+        end
+        c = (a+b)/2;
+        fc = eval(subs(y,x,c));
+    end
+    fprintf('\nRoot is: %f\n', c);
+end
+
+output : 
+
+Enter non-linear equations: 
+cos(x) - x * exp(x)
+Enter first guess: 
+0
+Enter second guess: 
+1
+Tolerable error: 
+0.00001
+
+
+a			b			c			f(c)
+0.000000	1.000000	0.500000	0.053222
+0.500000	1.000000	0.750000	-0.856061
+0.500000	0.750000	0.625000	-0.356691
+0.500000	0.625000	0.562500	-0.141294
+0.500000	0.562500	0.531250	-0.041512
+0.500000	0.531250	0.515625	0.006475
+0.515625	0.531250	0.523438	-0.017362
+0.515625	0.523438	0.519531	-0.005404
+0.515625	0.519531	0.517578	0.000545
+0.517578	0.519531	0.518555	-0.002427
+0.517578	0.518555	0.518066	-0.000940
+0.517578	0.518066	0.517822	-0.000197
+0.517578	0.517822	0.517700	0.000174
+0.517700	0.517822	0.517761	-0.000012
+0.517700	0.517761	0.517731	0.000081
+0.517731	0.517761	0.517746	0.000035
+0.517746	0.517761	0.517754	0.000011
+
+Root is: 0.517757
+
+
+
+3. False position method ////////////////
+
+% Clearing Screen
+clc
+
+% Setting x as symbolic variable
+syms x;
+
+% Input Section
+y = input('Enter non-linear equations: ');
+a = input('Enter first guess: ');
+b = input('Enter second guess: ');
+e = input('Tolerable error: ');
+
+% Finding Functional Value
+fa = eval(subs(y,x,a));
+fb = eval(subs(y,x,b));
+
+% Implementing Bisection Method
+if fa*fb > 0 
+    disp('Given initial values do not bracket the root.');
+else
+    c = a - (a-b) * fa/(fa-fb);
+    fc = eval(subs(y,x,c));
+    fprintf('\n\na\t\t\tb\t\t\tc\t\t\tf(c)\n');
+    while abs(fc)>e
+        fprintf('%f\t%f\t%f\t%f\n',a,b,c,fc);
+        if fa*fc< 0
+            b =c;
+            fb = eval(subs(y,x,b));
+        else
+            a =c;
+            fa = eval(subs(y,x,a));
+        end
+        c = a - (a-b) * fa/(fa-fb);
+        fc = eval(subs(y,x,c));
+    end
+    fprintf('\nRoot is: %f\n', c);
+end
+
+
+
+output : 
+Enter non-linear equations: 
+sin(x)+cos(x)+exp(x)-8
+Enter first guess: 
+2
+Enter second guess: 
+3
+Tolerable error: 
+0.00001
+
+
+a			b			c			f(c)
+2.000000	3.000000	2.010374	-0.054516
+2.010374	3.000000	2.015152	-0.025119
+2.015152	3.000000	2.017349	-0.011551
+2.017349	3.000000	2.018358	-0.005306
+2.018358	3.000000	2.018821	-0.002437
+2.018821	3.000000	2.019034	-0.001119
+2.019034	3.000000	2.019132	-0.000514
+2.019132	3.000000	2.019177	-0.000236
+2.019177	3.000000	2.019197	-0.000108
+2.019197	3.000000	2.019207	-0.000050
+2.019207	3.000000	2.019211	-0.000023
+2.019211	3.000000	2.019213	-0.000010
+
+Root is: 2.019214
+
+
+4////Newton Raphsan method ///////
+
+code : 
+
+function newton_raphson_user_input
+    % Prompt user for function and its derivative
+    func_str = input('Enter the function f(x) as a string (e.g., ''x^2 - 2''): ', 's');
+    f = str2func(['@(x) ', func_str]);
+    
+    deriv_str = input('Enter the derivative f''(x) as a string (e.g., ''2*x''): ', 's');
+    df = str2func(['@(x) ', deriv_str]);
+    
+    % Prompt user for initial guess, tolerance, and maximum iterations
+    x0 = input('Enter the initial guess x0: ');
+    tol = input('Enter the tolerance: ');
+    max_iter = input('Enter the maximum number of iterations: ');
+    
+    % Newton-Raphson iteration
+    [root, iter] = newton_raphson_method(f, df, x0, tol, max_iter);
+    
+    % Display the result
+    fprintf('Root found: %f\n', root);
+    fprintf('Number of iterations: %d\n', iter);
+end
+
+function [x, iter] = newton_raphson_method(f, df, x0, tol, max_iter)
+    x = x0;
+    for iter = 1:max_iter
+        fx = f(x);
+        dfx = df(x);
+        
+        if abs(dfx) < eps
+            error('Derivative near zero. No convergence.')
+        end
+        
+        x_new = x - fx / dfx;
+        
+        if abs(x_new - x) < tol
+            x = x_new;
+            return;
+        end
+        
+        x = x_new;
+    end
+    error('Maximum number of iterations reached. No convergence.')
+end
+
+
+
+output : 
+
+
+5. Secant Method //////
+
+code : 
+function secant_user_input
+    % Prompt user for function
+    func_str = input('Enter the function f(x) as a string (e.g., ''x^2 - 2''): ', 's');
+    f = str2func(['@(x) ', func_str]);
+    
+    % Prompt user for initial guesses, tolerance, and maximum iterations
+    x0 = input('Enter the first initial guess x0: ');
+    x1 = input('Enter the second initial guess x1: ');
+    tol = input('Enter the tolerance: ');
+    max_iter = input('Enter the maximum number of iterations: ');
+    
+    % Secant method iteration
+    [root, iter] = secant_method(f, x0, x1, tol, max_iter);
+    
+    % Display the result
+    fprintf('Root found: %f\n', root);
+    fprintf('Number of iterations: %d\n', iter);
+end
+
+function [x, iter] = secant_method(f, x0, x1, tol, max_iter)
+    for iter = 1:max_iter
+        fx0 = f(x0);
+        fx1 = f(x1);
+        
+        if abs(fx1 - fx0) < eps
+            error('Function values at initial guesses are too close. No convergence.')
+        end
+        
+        x_new = x1 - fx1 * (x1 - x0) / (fx1 - fx0);
+        
+        if abs(x_new - x1) < tol
+            x = x_new;
+            return;
+        end
+        
+        x0 = x1;
+        x1 = x_new;
+    end
+    error('Maximum number of iterations reached. No convergence.')
+end
+
+
+6. //////////gauss elimination method //
+
+code : function gauss_elimination_user_input
+    % Prompt user for the matrix A
+    A = input('Enter the coefficient matrix A (as a matrix, e.g., [1 2; 3 4]): ');
+    
+    % Prompt user for the right-hand side vector b
+    b = input('Enter the right-hand side vector b (as a vector, e.g., [5; 6]): ');
+    
+    % Perform Gaussian elimination
+    [x, augmented_matrix] = gauss_elimination(A, b);
+    
+    % Display the augmented matrix after elimination
+    disp('Augmented matrix after Gaussian elimination:')
+    disp(augmented_matrix)
+    
+    % Display the solution
+    disp('Solution vector x:')
+    disp(x)
+end
+
+function [x, augmented_matrix] = gauss_elimination(A, b)
+    % Combine A and b into the augmented matrix
+    augmented_matrix = [A, b];
+    [n, ~] = size(A);
+    
+    % Forward elimination
+    for i = 1:n
+        % Pivoting: swap rows to make sure the pivot element is non-zero
+        [~, max_row] = max(abs(augmented_matrix(i:n, i)));
+        max_row = max_row + i - 1;
+        if i ~= max_row
+            augmented_matrix([i, max_row], :) = augmented_matrix([max_row, i], :);
+        end
+        
+        % Make the diagonal element 1 and eliminate the lower part of the column
+        for j = i+1:n
+            factor = augmented_matrix(j, i) / augmented_matrix(i, i);
+            augmented_matrix(j, :) = augmented_matrix(j, :) - factor * augmented_matrix(i, :);
+        end
+    end
+    
+    % Back substitution
+    x = zeros(n, 1);
+    for i = n:-1:1
+        x(i) = (augmented_matrix(i, end) - augmented_matrix(i, 1:n) * x) / augmented_matrix(i, i);
+    end
+end
+
+
+6 ////// gauss elimination method 
+
+code : function gauss_elimination_user_input
+    % Prompt user for the matrix A
+    A = input('Enter the coefficient matrix A (as a matrix, e.g., [1 2; 3 4]): ');
+    
+    % Prompt user for the right-hand side vector b
+    b = input('Enter the right-hand side vector b (as a vector, e.g., [5; 6]): ');
+    
+    % Perform Gaussian elimination
+    [x, augmented_matrix] = gauss_elimination(A, b);
+    
+    % Display the augmented matrix after elimination
+    disp('Augmented matrix after Gaussian elimination:')
+    disp(augmented_matrix)
+    
+    % Display the solution
+    disp('Solution vector x:')
+    disp(x)
+end
+
+function [x, augmented_matrix] = gauss_elimination(A, b)
+    % Combine A and b into the augmented matrix
+    augmented_matrix = [A, b];
+    [n, ~] = size(A);
+    
+    % Forward elimination
+    for i = 1:n
+        % Pivoting: swap rows to make sure the pivot element is non-zero
+        [~, max_row] = max(abs(augmented_matrix(i:n, i)));
+        max_row = max_row + i - 1;
+        if i ~= max_row
+            augmented_matrix([i, max_row], :) = augmented_matrix([max_row, i], :);
+        end
+        
+        % Make the diagonal element 1 and eliminate the lower part of the column
+        for j = i+1:n
+            factor = augmented_matrix(j, i) / augmented_matrix(i, i);
+            augmented_matrix(j, :) = augmented_matrix(j, :) - factor * augmented_matrix(i, :);
+        end
+    end
+    
+    % Back substitution
+    x = zeros(n, 1);
+    for i = n:-1:1
+        x(i) = (augmented_matrix(i, end) - augmented_matrix(i, 1:n) * x) / augmented_matrix(i, i);
+    end
+end
+
+
+7 .. trapezoidal rule //////////////
+
+code : function trapezoidal_user_input
+    % Prompt user for the function to integrate
+    func_str = input('Enter the function f(x) to integrate (e.g., ''x^2''): ', 's');
+    f = str2func(['@(x) ', func_str]);
+    
+    % Prompt user for the interval [a, b]
+    a = input('Enter the lower limit of integration a: ');
+    b = input('Enter the upper limit of integration b: ');
+    
+    % Prompt user for the number of subintervals n
+    n = input('Enter the number of subintervals n: ');
+    
+    % Compute the integral using the trapezoidal rule
+    integral = trapezoidal_rule(f, a, b, n);
+    
+    % Display the result
+    fprintf('The integral of f(x) from %f to %f is approximately %f\n', a, b, integral);
+end
+
+function integral = trapezoidal_rule(f, a, b, n)
+    % Calculate the width of each subinterval
+    h = (b - a) / n;
+    
+    % Initialize the sum
+    sum = 0.5 * (f(a) + f(b));
+    
+    % Add the middle terms
+    for i = 1:n-1
+        x = a + i * h;
+        sum = sum + f(x);
+    end
+    
+    % Multiply by the width of the subintervals
+    integral = h * sum;
+end
+
+
+8. /////simpsons rule //////
+
+
+code : function simpsons_user_input
+    % Prompt user for the function to integrate
+    func_str = input('Enter the function f(x) to integrate (e.g., ''x^2''): ', 's');
+    f = str2func(['@(x) ', func_str]);
+    
+    % Prompt user for the interval [a, b]
+    a = input('Enter the lower limit of integration a: ');
+    b = input('Enter the upper limit of integration b: ');
+    
+    % Prompt user for the number of subintervals n (must be even)
+    n = input('Enter the number of subintervals n (must be even): ');
+    if mod(n, 2) ~= 0
+        error('Number of subintervals n must be even.');
+    end
+    
+    % Compute the integral using Simpson's rule
+    integral = simpsons_rule(f, a, b, n);
+    
+    % Display the result
+    fprintf('The integral of f(x) from %f to %f is approximately %f\n', a, b, integral);
+end
+
+function integral = simpsons_rule(f, a, b, n)
+    % Calculate the width of each subinterval
+    h = (b - a) / n;
+    
+    % Initialize the sum
+    sum = f(a) + f(b);
+    
+    % Add the terms with coefficients 4 and 2
+    for i = 1:n-1
+        x = a + i * h;
+        if mod(i, 2) == 0
+            sum = sum + 2 * f(x);
+        else
+            sum = sum + 4 * f(x);
+        end
+    end
+    
+    % Multiply by h/3
+    integral = (h / 3) * sum;
+end
+
+
+
+9..//// range kutta method ///////
+
+code :  function runge_kutta_user_input
+    % Prompt user for the differential equation
+    func_str = input('Enter the differential equation dy/dx=f(x,y) (e.g., ''y - x^2 + 1''): ', 's');
+    f = str2func(['@(x, y) ', func_str]);
+
+    % Prompt user for the interval [a, b]
+    a = input('Enter the initial value of x (a): ');
+    b = input('Enter the final value of x (b): ');
+
+    % Prompt user for the initial condition y(a)
+    y0 = input('Enter the initial value y(a): ');
+
+    % Prompt user for the step size h
+    h = input('Enter the step size h: ');
+
+    % Compute the solution using the Runge-Kutta method
+    [x, y] = runge_kutta(f, a, b, y0, h);
+
+    % Display the results
+    fprintf('x\t\t y\n');
+    for i = 1:length(x)
+        fprintf('%f\t %f\n', x(i), y(i));
+    end
+
+    % Plot the results
+    figure;
+    plot(x, y, '-o');
+    xlabel('x');
+    ylabel('y');
+    title('Runge-Kutta Method');
+    grid on;
+end
+
+function [x, y] = runge_kutta(f, a, b, y0, h)
+    % Initialize the arrays
+    x = a:h:b;
+    y = zeros(size(x));
+    y(1) = y0;
+
+    % Apply the Runge-Kutta method
+    for i = 1:(length(x) - 1)
+        k1 = h * f(x(i), y(i));
+        k2 = h * f(x(i) + h / 2, y(i) + k1 / 2);
+        k3 = h * f(x(i) + h / 2, y(i) + k2 / 2);
+        k4 = h * f(x(i) + h, y(i) + k3);
+        
+        y(i + 1) = y(i) + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
